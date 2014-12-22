@@ -19,7 +19,7 @@ Copy **deploy.php** and **deploy.conf.php** to your webhosting server.
 		"pass" => 'bitbucket-user-password',
 		...
 
-* The PHP script can be configured to deploy specific branches to specific directories. Let's assume you have production code in '*master*' branch, and current changes in '*dev*' branch. You can configure to have 'dev' branch to be synced with  */<www_root>/tes*t directory on server, so you do not touch production files, and you have a way to test it before making then official. One you have done your changes in '*dev*' branch, you can merge it back to the '*master*' and then the script will deploy changes to */<www_root>/* directory making then official. Here is the sample configuration file to achieve this: 
+* The PHP script can be configured to deploy specific branches to specific directories. Let's assume you have production code in '*master*' branch, and current changes in '*dev*' branch. You can configure to have '*dev*' branch to be synced with  */<www_root>/tes*t directory on server, so you do not touch production files, and you have a way to test it before making then official. Once you have done your changes in '*dev*' branch, you can merge it back to the '*master*' and then the script will deploy changes to */<www_root>/* directory making then official. Here is the sample configuration file to achieve this: 
 
 		...
 		"branch_to_dir" => [
