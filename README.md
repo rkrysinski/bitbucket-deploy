@@ -6,7 +6,7 @@
 * Besides the files, this offers also an approach for managing the project in specific way in branches, which may or may not be used. The script is good to go with default configuration, but there is something more that you might be interested in.
 
 ## Implementation ##
-* The [BitBucket POST hook](https://confluence.atlassian.com/display/BITBUCKET/POST+hook+management) delivers to PHP script so called 'payload' with information about what was pushed to the repository. This information is used to synchronize repository with files on webhosting server via BitBucket REST API. If the script is run for the first time, it will download all files from BitBucket repository and create a .deploy file. If the .deploy file exists the 'payload' data is used to sync changes. The activities are recorded in debug.log file.
+The [BitBucket POST hook](https://confluence.atlassian.com/display/BITBUCKET/POST+hook+management) delivers to PHP script so called 'payload' with information about what was pushed to the repository. This information is used to synchronize repository with files on webhosting server via BitBucket REST API. If the script is run for the first time, it will download all files from BitBucket repository and create a .deploy file. If the .deploy file exists the 'payload' data is used to sync changes. The activities are recorded in debug.log file.
 
 ## Installation ##
 Copy **deploy.php** and **deploy.conf.php** to your webhosting server.
