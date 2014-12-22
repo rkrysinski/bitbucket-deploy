@@ -6,10 +6,10 @@ $configuration = [
 	"pass" => 'bitbucket-user-password',
 
 	"branch_to_dir" => [
-		"master" => "test", // can be set to ""
+		"master" => "", 
 	],
 	
-	"repository_root" => "app", // can be set to ""
+	"repository_root" => "",
 
 	"debug" => false,
 ];
