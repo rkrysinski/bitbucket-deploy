@@ -199,16 +199,13 @@ class DeployManager
 		self::debug("initialize_deploy_destination_dir: start");
 		
 		$branch_to_dir = $this->config["branch_to_dir"];
-		$root_dir = "";
-		if (array_key_exists($branch, $branch_to_dir)) {
+		$root_dir = $branch;
+		if (array_key_exists($branch, $branch_to_dir)) 
+		{
 			$root_dir = $branch_to_dir[$branch];
 		}
 
-		$this->dst_dir = getcwd();
-		if ($root_dir != "")
-		{
-			$this->dst_dir .=  "/" . $root_dir;
-		}
+		$this->dst_dir = getcwd() . "/" . $root_dir;
 		
 		self::debug("initialize_deploy_destination_dir: end= " . $this->dst_dir);
 	}
