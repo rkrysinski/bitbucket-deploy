@@ -212,7 +212,9 @@ class DeployManager
 
 	private function mkdir($dir_name)
 	{
-		$result = mkdir($dir_name, 0777, TRUE);
+		if (!file_exists($dir_name)) {
+			$result = mkdir($dir_name, 0777, TRUE);
+		}
 		self::debug("mkdir: $dir_name ($result)");
 	}
 	
