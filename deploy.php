@@ -212,10 +212,15 @@ class DeployManager
 
 	private function mkdir($dir_name)
 	{
-		if (!file_exists($dir_name)) {
+		if (file_exists($dir_name)) 
+		{
+			self::debug("mkdir: $dir_name already exists, skipping...");		
+		} 
+		else 
+		{
 			$result = mkdir($dir_name, 0777, TRUE);
+			self::debug("mkdir: $dir_name ($result)");
 		}
-		self::debug("mkdir: $dir_name ($result)");
 	}
 	
 	private function log($text) 
