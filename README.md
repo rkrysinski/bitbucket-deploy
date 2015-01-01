@@ -28,6 +28,8 @@ Copy **deploy.php** and **deploy.conf.php** to your webhosting server.
 		],
 		...
 
+	**NOTE**: When no branch-dir mapping defined, the script will create a directory with the same name as branch e.g. when committing something to branch '*demo*' and no mapping defined in "branch_to_dir", the script will deploy changes to  */<www_root>/demo* directory on server.
+
 * You can configure the script to download only some part of repository to server. It can be useful in cases where you have project with the following layout:
 
 		.
@@ -74,3 +76,6 @@ Configure your repository to send POST to deploy.php on commit.
 * Click **Add hook**. A new section appears for the **POST** hook.
 * Enter the URL where Bitbucket should send its update messages: e.g. https://<webhosting_URL>/deploy.php
 * Press **Save**.
+
+## License ##
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
