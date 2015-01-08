@@ -25,9 +25,11 @@ class DeployManager
 	private $payload;
 	private $isDebug;
 	private $dst_dir;
+	private $branch_to_dir;
+	private $repository_root;
+	private $deploy_marker;
 	
 	const LOG_FILENAME = "debug.log";
-	const DEPLOY_MARKER = ".deploy";
 	const BITBUCKET_URL = "https://api.bitbucket.org/1.0/repositories";
 	
 	public function __construct($config) 
@@ -58,6 +60,8 @@ class DeployManager
 		$this->payload = json_decode($json);
 
 		self::debug("consume_payload: payload:" . json_encode($this->payload, JSON_PRETTY_PRINT));
+		
+		self::initialize_deploy_config();	
 		
 		foreach($this->payload->commits as $commit) 
 		{
@@ -91,7 +95,7 @@ class DeployManager
 		
 		self::download_node($commit->node);
 		
-		touch(self::DEPLOY_MARKER);
+		touch($this->deploy_marker);
 
 		self::log("deploy_from_scratch finished");
 	}
@@ -114,7 +118,7 @@ class DeployManager
 	{
 		self::debug("get_bitbucket_src begin");
 		$url = self::BITBUCKET_URL . $this->payload->repository->absolute_url 
-				. "src/" . $revision . "/" . $this->config["repository_root"] . "/" . $dir;
+				. "src/" . $revision . "/" . $this->repository_root . "/" . $dir;
 		self::debug("get_bitbucket_src $url");
 		$data = self::do_get_src($url);
 		return json_decode($data);		
@@ -155,7 +159,7 @@ class DeployManager
 		
 		foreach ($commit->files as $file) 
 		{
-			if (self::not_starts_with($file->file, $this->config["repository_root"])) 
+			if (self::not_starts_with($file->file, $this->repository_root)) 
 			{
 				// file that should not be deployed due to configuration
 				continue;
@@ -188,7 +192,7 @@ class DeployManager
 		$path_parts = pathinfo($file_in_repo);
 		$file_path = $path_parts['dirname'] . "/";
 		$file_name = $path_parts['basename'];
-		$file_dir_on_disk = $this->dst_dir . "/" . substr($file_path, strlen($this->config["repository_root"]), strlen($file_path));
+		$file_dir_on_disk = $this->dst_dir . "/" . substr($file_path, strlen($this->repository_root), strlen($file_path));
 		self::mkdir($file_dir_on_disk);
 		return $file_dir_on_disk . "/" . $file_name;
 	}
@@ -208,14 +212,14 @@ class DeployManager
 	
 	private function is_initial_deploy()
 	{
-		return !file_exists($this->dst_dir . "/" . self::DEPLOY_MARKER);
+		return !file_exists($this->dst_dir . "/" . $this->deploy_marker);
 	}
 	
 	private function initialize_deploy_destination_dir($branch) 
 	{
 		self::debug("initialize_deploy_destination_dir: start");
 		
-		$branch_to_dir = $this->config["branch_to_dir"];
+		$branch_to_dir = $this->branch_to_dir;
 		$root_dir = $branch;
 		if (array_key_exists($branch, $branch_to_dir)) 
 		{
@@ -227,6 +231,30 @@ class DeployManager
 		self::debug("initialize_deploy_destination_dir: end= " . $this->dst_dir);
 	}
 
+	private function initialize_deploy_config()
+	{
+		$repo = $this->payload->repository->name;
+		$repository_mapping = $this->config["repository_mapping"];
+		if (array_key_exists($repo, $repository_mapping))
+		{
+			$this->branch_to_dir = $repository_mapping[$repo]["branch_to_dir"];
+			$this->repository_root = $repository_mapping[$repo]["repository_root"];
+		}
+		else
+		{
+			$this->branch_to_dir = $this->config["branch_to_dir"];
+			$this->repository_root = $this->config["repository_root"];	
+		}
+		
+		$this->deploy_marker = ".deploy_" . $repo;
+		
+		self::debug("initialize_deploy_config: \nbranch_to_dir = " 
+			. var_export($this->branch_to_dir, true) 
+			. "\nrepository_root: $this->repository_root"
+			. "\ndeploy_marker: $this->deploy_marker"
+		);
+	}
+	
 	private function mkdir($dir_name)
 	{
 		if (file_exists($dir_name)) 
