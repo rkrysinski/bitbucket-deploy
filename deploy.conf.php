@@ -26,6 +26,21 @@ $configuration = [
 	],
 	
 	"repository_root" => "",
+    
+	"repository_mapping" => [
+		"bitbucket-repository-name-1" => [
+			"branch_to_dir" => [
+				"master" => "",
+			],
+			"repository_root" => "",
+		],
+		"bitbucket-repository-name-2" => [
+			"branch_to_dir" => [
+				"master" => "",
+			],
+			"repository_root" => "",
+		],        
+	],
 
 	"debug" => false,
 ];
