@@ -70,7 +70,7 @@ Copy **deploy.php** and **deploy.conf.php** to your webhosting server.
 					"dev" => "test",
 				],
 				"repository_root" => "",
-				]
+			]
 		],
 		...
 
