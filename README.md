@@ -61,6 +61,21 @@ Copy **deploy.php** and **deploy.conf.php** to your webhosting server.
 		"repository_root" => "app",
 		...
 
+* It may happen that your application is combined with some building blocks that are stored in separate repositories. You can configure script to handle payloads coming from different repositories' Hooks. In order to do that you have to configure the "repository_mapping" configuration. Let's assume you have AngularJS front-end with PHP REST back-end, where PHP code is stored in different BitBucket repository e.g. "php-rest-api". In order to configure payload for for PHP code you have to configure the following:
+
+		...
+		"repository_mapping" => [
+			"php-rest-api" => [
+				"branch_to_dir" => [
+					"dev" => "test",
+				],
+				"repository_root" => "",
+				]
+		],
+		...
+
+	**NOTE**: The "branch_to_dir" and "repository_root" have the same effect like described previously, so in this example the '*dev*' branch will be deployed to */<www_root>/test* directory on server and all repository files are copied. Additional POST Hook in "php-rest-api" repository should be defined.
+
 * You can turn on the debug mode to see more details in log file. 
 
 		...
